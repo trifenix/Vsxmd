@@ -30,8 +30,12 @@ namespace Vsxmd.Units
         public override IEnumerable<string> ToMarkdown() =>
             new[]
             {
-                "##### Remarks",
+                "### !Importante",
+                string.Empty,
+                "<InlineAlert variant='info' slots='text'/>",
+                string.Empty,
                 this.ElementContent,
+                string.Empty,
             };
 
         /// <summary>

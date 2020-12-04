@@ -8,13 +8,86 @@ namespace Vsxmd
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Xml.Linq;
     using Vsxmd.Units;
 
     /// <inheritdoc/>
     public class Converter : IConverter
     {
+
+        public string GetClassMd(string header, string header2, string description, string ctors, string constants, string props, string funcs)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("---");
+            sb.AppendLine($"title : {header}");
+            sb.AppendLine($"description: {header2}");
+            sb.AppendLine("---");
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine($"# {header}");
+            sb.AppendLine();
+            sb.AppendLine("## Descripción");
+            sb.AppendLine($"{description}");
+            sb.AppendLine("## Constructores");
+            sb.AppendLine();
+            if (!string.IsNullOrWhiteSpace(ctors))
+            {
+                sb.Append(ctors);
+            }
+            else
+            {
+                sb.AppendLine("no existen constructores");
+            }
+            sb.AppendLine();
+
+            sb.AppendLine();
+            sb.AppendLine("## Funciones");
+
+            sb.AppendLine();
+
+            if (!string.IsNullOrWhiteSpace(funcs))
+            {
+                sb.Append(funcs);
+            }
+            else
+            {
+                sb.AppendLine("no existen funciones");
+            }
+            sb.AppendLine();
+
+
+            sb.AppendLine("## Propiedades");
+            sb.AppendLine();
+            if (!string.IsNullOrWhiteSpace(props))
+            {
+                sb.Append(props);
+            }
+            else
+            {
+                sb.AppendLine("no existen propidades");
+            }
+            sb.AppendLine();
+
+            sb.AppendLine("## Constantes");
+            if (!string.IsNullOrWhiteSpace(constants))
+            {
+                sb.Append(constants);
+            }
+            else
+            {
+                sb.AppendLine("no existen campos");
+            }
+
+
+            sb.AppendLine();
+            return sb.ToString();
+        }
+
         private readonly XDocument document;
+
+        public readonly Dictionary<string, string> dict;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Converter"/> class.
@@ -23,6 +96,7 @@ namespace Vsxmd
         public Converter(XDocument document)
         {
             this.document = document;
+            dict = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -30,38 +104,42 @@ namespace Vsxmd
         /// </summary>
         /// <param name="document">The XML document.</param>
         /// <returns>The generated Markdown content.</returns>
-        public static string ToMarkdown(XDocument document) =>
+        public static Dictionary<string, string> ToMarkdown(XDocument document) =>
             new Converter(document).ToMarkdown();
 
-        /// <inheritdoc/>
-        public string ToMarkdown() =>
-            ToUnits(this.document.Root)
-                .SelectMany(x => x.ToMarkdown())
-                .Join("\n\n")
-                .Suffix("\n");
 
-        private static IEnumerable<IUnit> ToUnits(XElement docElement)
+
+        public Dictionary<string, string> ToMarkdown() {
+            var grps = ToUnits(this.document.Root);
+            var localdict = new Dictionary<string, string>();
+            foreach (var item in grps)
+            {                
+                var classItem = item.FirstOrDefault(s => s.Kind == MemberKind.Type);
+                if (classItem.name.TypeShortName.ToLower().Contains("namespace")) break;
+
+                var sb = new StringBuilder();
+                var ctorMd = item.Where(s => s.Kind == MemberKind.Constructor).SelectMany(s => s.ToMarkdown()).Join("\n");
+                var funcMd = item.Where(s => s.Kind == MemberKind.Method).SelectMany(s=>s.ToMarkdown()).Join("\n");
+                var propsMd = item.Where(s => s.Kind == MemberKind.Property).SelectMany(s => s.ToMarkdown()).Join("\n");
+                var constantsMd = item.Where(s => s.Kind == MemberKind.Constants).SelectMany(s => s.ToMarkdown()).Join("\n");
+                localdict.Add(TakeOffComma(classItem.TypeName), GetClassMd(TakeOffComma(classItem.name.TypeShortName), classItem.TypeName, classItem.Summary.Join("\n"), ctorMd, constantsMd, propsMd, funcMd));
+            }
+
+            return localdict;
+        }
+        public static string TakeOffComma(string element) => element.Replace("`1", "_T");
+
+
+        private static IEnumerable<IGrouping<string, MemberUnit>> ToUnits(XElement docElement)
         {
-            // assembly unit
-            var assemblyUnit = new AssemblyUnit(docElement.Element("assembly"));
-
-            // member units
-            var memberUnits = docElement
+            
+            var baseunit = docElement
                 .Element("members")
                 .Elements("member")
                 .Select(element => new MemberUnit(element))
                 .Where(member => member.Kind != MemberKind.NotSupported)
-                .GroupBy(unit => unit.TypeName)
-                .Select(MemberUnit.ComplementType)
-                .SelectMany(group => group)
-                .OrderBy(member => member, MemberUnit.Comparer);
-
-            // table of contents
-            var tableOfContents = new TableOfContents(memberUnits);
-
-            return new IUnit[] { assemblyUnit }
-                .Concat(new[] { tableOfContents })
-                .Concat(memberUnits);
+                .GroupBy(unit => unit.TypeName);
+            return baseunit;
         }
     }
 }

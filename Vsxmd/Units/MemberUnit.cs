@@ -16,7 +16,7 @@ namespace Vsxmd.Units
     /// </summary>
     internal class MemberUnit : BaseUnit
     {
-        private readonly MemberName name;
+        public readonly MemberName name;
 
         static MemberUnit()
         {
@@ -66,8 +66,8 @@ namespace Vsxmd.Units
                 ? Enumerable.Empty<string>()
                 : new[]
                 {
-                    "##### Summary",
-                    "*Inherit from parent.*",
+                    "### Documentación heredada",
+                    "*Hereda desde el padre*",
                 };
 
         private IEnumerable<string> Namespace =>
@@ -75,11 +75,11 @@ namespace Vsxmd.Units
             ? Enumerable.Empty<string>()
             : new[]
             {
-                $"##### Namespace",
+                $"### Namespace",
                 $"{this.name.Namespace}",
             };
 
-        private IEnumerable<string> Summary =>
+        public IEnumerable<string> Summary =>
             SummaryUnit.ToMarkdown(this.GetChild("summary"));
 
         private IEnumerable<string> Returns =>
@@ -110,9 +110,10 @@ namespace Vsxmd.Units
             SeealsoUnit.ToMarkdown(this.GetChildren("seealso"));
 
         /// <inheritdoc />
-        public override IEnumerable<string> ToMarkdown() =>
-            new[] { this.name.Caption }
-                .Concat(this.Namespace)
+        public override IEnumerable<string> ToMarkdown() {
+
+            return new[] { this.name.Caption }
+                    
                 .Concat(this.InheritDoc)
                 .Concat(this.Summary)
                 .Concat(this.Returns)
@@ -123,6 +124,9 @@ namespace Vsxmd.Units
                 .Concat(this.Example)
                 .Concat(this.Remarks)
                 .Concat(this.Seealsos);
+
+        }
+            
 
         /// <summary>
         /// Complement a type unit if the member unit <paramref name="group"/> does not have one.

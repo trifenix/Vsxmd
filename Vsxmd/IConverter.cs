@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace Vsxmd
 {
     /// <summary>
@@ -15,6 +17,6 @@ namespace Vsxmd
         /// Convert to Markdown syntax.
         /// </summary>
         /// <returns>The generated Markdown content.</returns>
-        string ToMarkdown();
+        Dictionary<string, string> ToMarkdown();
     }
 }

@@ -6,12 +6,14 @@
 
 namespace Vsxmd
 {
+    using Newtonsoft.Json;
     using System;
   using System.Collections.Generic;
   using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Text;
     using System.Xml.Linq;
     using Vsxmd.Units;
     /// <summary>
@@ -25,6 +27,58 @@ namespace Vsxmd
     /// </remarks>
     internal static class Program
     {
+
+        public static string MainPagePackage(string header, string description, string summary, string package_icon, string nugeturl, string githuburl, string devopsurl, string badge = "") {
+            var sb = new StringBuilder();
+            sb.Append(GetHeader($"package {header}", description));
+            sb.AppendLine($"# ![icon_package]({package_icon}){header}");
+            sb.AppendLine();
+            sb.AppendLine($" {description}");
+            sb.AppendLine();
+            sb.AppendLine("## Descripción");
+            sb.AppendLine();
+            sb.AppendLine($"### {header}");
+            sb.AppendLine();
+            sb.AppendLine($"{ConvertToSummary(summary)}");
+            sb.AppendLine();
+            sb.AppendLine("| Tipo | Fuente |");
+            sb.AppendLine("|---|---|");
+            sb.AppendLine($"|![nuget](https://logos.trifenix.io/nuget.24x24.png) | [Paquete en Nuget.org]({nugeturl})|");
+            sb.AppendLine($"|![nuget](https://logos.trifenix.io/nuget.24x24.png) | [Paquete en devops]({devopsurl})|");
+            sb.AppendLine($"|![github](https://logos.trifenix.io/github.24x24.png) | [Código fuente]({githuburl})|");
+            if (!string.IsNullOrWhiteSpace(badge))
+            {
+                sb.AppendLine();
+                sb.AppendLine($"![release badge]({badge})");
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
+        }
+
+        public static string ConvertToSummary(string summary) => summary.Split("\n").Select(s => s.Trim()).Join("\n");
+
+        public static string MainNamespace(string name, string ns, string summary) {
+            var sb = new StringBuilder();
+            sb.Append(GetHeader($"{name}", ns));
+            sb.AppendLine("# Descripción del namespace");
+            sb.AppendLine();
+            sb.AppendLine(ConvertToSummary(summary));
+            return sb.ToString();
+        }
+
+        public static string GetHeader(string header, string description)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("---");
+            sb.AppendLine($"title : {header}");
+            sb.AppendLine($"description: {description}");
+            sb.AppendLine("---");
+            sb.AppendLine();
+            sb.AppendLine();
+            return sb.ToString();
+        }
+
         /// <summary>
         /// Program main function entry.
         /// </summary>
@@ -39,26 +93,33 @@ namespace Vsxmd
                     return;
                 }
                 string xmlPath = args[0];
+
+
+                var dict = new Dictionary<string, string>();
+
+
+
                 string markdownPath = args.ElementAtOrDefault(1);
+
                 if (string.IsNullOrWhiteSpace(markdownPath))
                 {
                     // replace extension with `md` extension
                     markdownPath = Path.ChangeExtension(xmlPath, ".md");
                 }
                 var document = XDocument.Load(xmlPath);
+
                 // paso 1, sacar información desde la misma ruta que el xmlpath, del csproj.
                 var baseXmlPath = Path.GetDirectoryName(xmlPath);
+
                 // obtengo archivo del proyecto.
                 var proj = Path.Combine(baseXmlPath, $"{Path.GetFileNameWithoutExtension(xmlPath)}.csproj");
+
                 // cargo el proyecto
                 var projDocument = XDocument.Load(proj);
                 var rootProject = projDocument.Root;
                 var propertyGroups = rootProject.Element("PropertyGroup");
-                // ---
-                // title: package mdm
-                // description: Atributo que determina que un campo es autonumérico
-                // ---
                 var package_title = propertyGroups.Element("title").Value;
+                var idPackage = propertyGroups.Element("id").Value;
                 var package_description = propertyGroups.Element("description").Value;
                 var package_summary = propertyGroups.Element("summary").Value;
                 var main_icon = propertyGroups.Element("iconUrl").Value;
@@ -66,82 +127,86 @@ namespace Vsxmd
                 var devops_url = propertyGroups.Element("devopsUrl").Value;
                 var github_url = propertyGroups.Element("RepositoryUrl").Value;
                 var relasebadge_url = propertyGroups.Element("releaseBadgeUrl").Value;
+                var mainMarkdown = Path.Combine(baseXmlPath, $"nuget-packages/{idPackage}/index.md");
+                var baseMarkdown = Path.GetDirectoryName(mainMarkdown);
 
+                Directory.CreateDirectory(baseMarkdown);
 
-                var mainMarkdown = Path.Combine(baseXmlPath,"markdown/index.md");
-                var pathDirectory = Path.GetDirectoryName(mainMarkdown);
-                
-                Directory.CreateDirectory(pathDirectory);
+                File.WriteAllText(mainMarkdown, MainPagePackage(package_title, package_description, package_summary, main_icon, nuget_url, github_url, devops_url, relasebadge_url));
 
-                
-                var toMainMarkDown = new string[]
-                {
-                    $"---\ntitle : package {package_title}\ndescription: {package_description}\n---",
-                    "<Hero slots='image, heading, text' background='rgb(64, 34, 138)'/>",
-                    "![Hero image](https://images.trifenix.io/great-job.png)",
-                    $"# {package_title}",
-                    $"{package_description}",
-                    "<Resources slots='image, heading, links' />",
-                    "#### Resumen",
-                    new List<string>
-                    {
-                        $"![image]({main_icon})",
-                        "* [Descripción](./index.md#descripción)",
-                        "* [Especificación](./index.md#especificación)",
-                    }
-                    .Join("\n"),
-                    $"## Descripción",
-                    $"### {package_title}",
-                    $"{package_summary}",
-                    "## Especificación",
-                    new List<string> {
-                        "| Tipo | Fuente |",
-                        "|---|---|",
-                        $"| ![nuget](https://logos.trifenix.io/nuget.24x24.png) | [Paquete en Nuget.org]({nuget_url})|",
-                        $"|![nuget](https://logos.trifenix.io/nuget.24x24.png) | [Paquete en devops (puede pedir autenticación)]({devops_url})|",
-                        $"|![github](https://logos.trifenix.io/github.24x24.png) | [Código Fuente]({github_url})|",
-                    }.Join("\n"),
-                    $"![release badge]({relasebadge_url})"
-                }.ToList().Join("\n\n")
-                .Suffix("\n");
-                Console.WriteLine(toMainMarkDown);
-                Console.WriteLine(mainMarkdown);
-                File.WriteAllText(mainMarkdown, toMainMarkDown);
-                
+                dict.Add("Descripción", $"/nuget-packages/{idPackage}/");
 
                 var members = document.Root.Element("members");
-
                 var elementMembers = members.Elements("member");
-
-                
-
                 var types = elementMembers.Where(s => s.Attributes().Any(a => a.Value.Contains("T:")));
 
-                var namespaces = types.Where(s=>s.Attribute("name").Value.ToLower().Contains("namespace"));
-                
-                foreach (var m in namespaces){
-                    var splt = m.Value.Split(":")[1];
-                    
+                var namespaces = types.Where(s => s.Attribute("name").Value.ToLower().Contains("namespace"));
+
+
+                foreach (var m in namespaces)
+                {
+                    var splt = m.Attribute("name").Value.Split(":")[1].Split(".");
+                    var tk = splt.Count() - 1;
+                    var nsms = splt.Take(tk).Join(".");
+                    var summary = m.Element("summary").Value;
+                    var title = nsms.Split(".").Last();
+                    var md = Path.Combine(baseMarkdown, $"{nsms}/index.md");
+                    var fld = Path.GetDirectoryName(md);
+                    Directory.CreateDirectory(fld);
+                    File.WriteAllText(md, MainNamespace(title, nsms, summary));
+                    dict.Add(nsms, $"/nuget-packages/{idPackage}/{nsms}/");
 
                 }
-                
 
-                return;
+
+
+                var typesWithoutNamespace = types.Where(s => !s.Attribute("name").Value.ToLower().Contains("namespace"));
+
 
                 var converter = new Converter(document);
-                
+
                 var markdown = converter.ToMarkdown();
-                File.WriteAllText(markdownPath, markdown);
-                string vsxmdAutoDeleteXml = args.ElementAtOrDefault(2);
-                if (string.IsNullOrWhiteSpace(vsxmdAutoDeleteXml))
+
+                foreach (var item in markdown)
                 {
-                    return;
+                    var folder = Path.Combine(baseMarkdown, $"{item.Key}/");
+                    Directory.CreateDirectory(folder);
+                    var file = Path.Combine(folder, "index.md");
+                    File.WriteAllText(file, item.Value);
+                    dict.Add(item.Key, $"/nuget-packages/{idPackage}/{item.Key}/");
                 }
-                var shouldDelete = Convert.ToBoolean(vsxmdAutoDeleteXml, CultureInfo.InvariantCulture);
-                if (shouldDelete)
+
+                //generate json
+
+                var ordered = dict.OrderBy(s => s.Value);
+
+                var jsn = new
                 {
-                    File.Delete(xmlPath);
-                }
+                    title = package_title,
+                    path = $"/nuget-packages/{idPackage}/",
+                    pages = dict.Select(d => new
+                    {
+                        title = d.Key.Split(".").Last(),
+                        path = d.Value,
+                    }).ToArray(),
+
+                };
+
+                var sw = new StringWriter();
+
+                var writer = new JsonTextWriter(sw);
+                //writer.QuoteName = false;
+                writer.Formatting = Formatting.Indented;
+                
+
+                new JsonSerializer().Serialize(writer, jsn);
+
+                var sb = new StringBuilder();
+                
+
+
+                File.WriteAllText(Path.Combine(baseMarkdown,"menu.json"), sw.ToString());
+
             }
             catch (Exception e)
             {

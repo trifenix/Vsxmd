@@ -52,7 +52,7 @@ namespace Vsxmd.Units
 
             return new[]
             {
-                "##### See Also",
+                "### Vea también",
                 string.Join("\n", markdowns),
             };
         }

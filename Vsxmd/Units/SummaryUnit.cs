@@ -29,8 +29,7 @@ namespace Vsxmd.Units
         /// <inheritdoc />
         public override IEnumerable<string> ToMarkdown() =>
             new[]
-            {
-                "##### Summary",
+            {                
                 this.ElementContent,
             };
 

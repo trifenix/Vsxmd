@@ -20,9 +20,6 @@
             <param name="document">The XML document.</param>
             <returns>The generated Markdown content.</returns>
         </member>
-        <member name="M:Vsxmd.Converter.ToMarkdown">
-            <inheritdoc/>
-        </member>
         <member name="T:Vsxmd.IConverter">
             <summary>
             Converter for XML document to Markdown syntax conversion.

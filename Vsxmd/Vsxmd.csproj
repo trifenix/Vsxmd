@@ -12,6 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-beta.61">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -20,13 +21,12 @@
   </ItemGroup>
   <!-- NuGet Metadata: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#nuget-metadata-properties -->
   <PropertyGroup>
-    <Title>Vsxmd</Title>
+    <Title>Doc2AdobeMd fork: Vsxmd</Title>
     <Version>0.0.0</Version>
-    <Authors>Junle Li, Sales Lessa Lopes</Authors>
-    <Description>VS XML documentation -&gt; Markdown syntax.</Description>
-    <Copyright>Copyright 2015-Present</Copyright>
+    <Authors>trifenix - (Junle Li, Sales Lessa Lopes)</Authors>
+    <Description>Generación de código a markdowwns de adobe (https://github.com/adobe/gatsby-theme-aio)</Description>    
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/lijunle/Vsxmd</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/trifenix/Vsxmd</PackageProjectUrl>
     <PackageTags>Vsxmd VS XML document Markdown</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IncludeBuildOutput>false</IncludeBuildOutput>

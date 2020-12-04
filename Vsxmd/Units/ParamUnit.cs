@@ -66,8 +66,8 @@ namespace Vsxmd.Units
                     ? Enumerable.Empty<string>()
                     : new[]
                     {
-                        "##### Parameters",
-                        $"This {memberKind.ToLowerString()} has no parameters.",
+                        "### Parametetros",
+                        $"Este {memberKind.ToLowerString()} no tiene parámetros.",
                     };
             }
 
@@ -77,16 +77,17 @@ namespace Vsxmd.Units
 
             var table = new[]
             {
-                "| Name | Type | Description |",
-                "| ---- | ---- | ----------- |",
+                "| Nombre | Tipo | Descripción |",
+                "| ------ | ---- | ----------- |",
             }
             .Concat(markdowns);
 
             return new[]
             {
-                "##### Parameters",
+                "### Parametros",
                 string.Join("\n", table),
             };
         }
+
     }
 }

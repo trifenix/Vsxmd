@@ -84,13 +84,13 @@ namespace Vsxmd.Units
         /// </example>
         internal string Caption =>
             this.Kind == MemberKind.Type
-            ? $"{this.Href.ToAnchor()}## {this.FriendlyName.Escape()} `{this.Kind.ToLowerString()}`"
+            ? $"### {this.FriendlyName.Escape()}"
             : this.Kind == MemberKind.Constants ||
               this.Kind == MemberKind.Property
-            ? $"{this.Href.ToAnchor()}### {this.FriendlyName.Escape()} `{this.Kind.ToLowerString()}`"
+            ? $"### {this.FriendlyName.Escape()}"
             : this.Kind == MemberKind.Constructor ||
               this.Kind == MemberKind.Method
-            ? $"{this.Href.ToAnchor()}### {this.FriendlyName.Escape()}({this.paramNames.Join(",")}) `{this.Kind.ToLowerString()}`"
+            ? $"### {this.FriendlyName.Escape()}({this.paramNames.Join(",")})"
             : string.Empty;
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Vsxmd.Units
             ? this.NameSegments.TakeAllButLast(2).Join(".")
             : string.Empty;
 
-        private string TypeShortName =>
+        public string TypeShortName =>
             this.Kind == MemberKind.Type
             ? this.NameSegments.Last()
             : this.Kind == MemberKind.Constants ||

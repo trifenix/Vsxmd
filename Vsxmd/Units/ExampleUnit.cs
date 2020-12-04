@@ -30,8 +30,14 @@ namespace Vsxmd.Units
         public override IEnumerable<string> ToMarkdown() =>
             new[]
             {
-                $"##### Example",
+                $"### Ejemplo de código",
+                $"<CodeBlock slots='heading, code' repeat='3' languages='C#' /> ",
+                string.Empty,
+                "#### Code",
+                $"```",
                 $"{this.ElementContent}",
+                $"```",
+                string.Empty,
             };
 
         /// <summary>
