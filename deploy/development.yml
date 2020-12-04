@@ -33,9 +33,7 @@ steps:
       vstsFeed: '$(default-feed)'
       includeNuGetOrg: false 
       versioningScheme: byBuildNumber
-
-
-  
+        
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack' 
     inputs: 
