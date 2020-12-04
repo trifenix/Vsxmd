@@ -1,0 +1,53 @@
+trigger:
+    branches:
+      include:        
+        - develop
+        - release/*
+  
+pool:
+  vmImage: "ubuntu-latest"
+
+pr: none
+
+variables: 
+  BuildConfiguration: 'release'
+  
+steps:
+  - task: gitversion/setup@0
+    inputs:
+      versionSpec: '5.1'
+      includePrerelease: true
+    displayName : "Configurando gitversion"
+
+  - task: gitversion/execute@0
+    inputs:
+      useConfigFile: true
+      configFilePath: "deploy/gitConfig.yml" 
+    displayName: "generando la nueva versión"
+  
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'restore'
+      projects: '**/Vsxmd.csproj'
+      feedsToUse: 'select'
+      vstsFeed: '$(default-feed)'
+      includeNuGetOrg: false 
+      versioningScheme: byBuildNumber
+
+
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet pack' 
+    inputs: 
+      command: pack
+      packagesToPack: '**/*.csproj'       
+      arguments: '--configuration $(BuildConfiguration) /p:Version=$(SemVer)' 
+      versioningScheme: byEnvVar 
+      versionEnvVar: SemVer
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: "$(Build.ArtifactStagingDirectory)"
+      artifactName: drop
+      publishLocation: 'container'
+    displayName: "publish nuget"

@@ -1,0 +1,18 @@
+mode: Mainline
+next-version: 0.0.10
+branches:
+  master:
+    regex: ^master$|^main$
+    tag: ''
+  feature:
+    tag: alpha
+  release:
+    tag: rc
+  develop:
+    tag: beta
+  
+
+
+ignore:
+  sha: []
+merge-message-formats: {}
