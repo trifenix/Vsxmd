@@ -37,31 +37,31 @@ steps:
     inputs:
       command: 'publish'
       publishWebProjects: false
-      arguments: '--runtime linux-musl-x64'
+      arguments: '-c Release --runtime linux-musl-x64'
   
   - task: DotNetCoreCLI@2
     inputs:
       command: 'publish'
       publishWebProjects: false
-      arguments: '--runtime linux-x64'
+      arguments: '-c Release -runtime linux-x64'
   
   - task: DotNetCoreCLI@2
     inputs:
       command: 'publish'
       publishWebProjects: false
-      arguments: '--runtime osx-x64'
+      arguments:'-c Release --runtime osx-x64'
   
   - task: DotNetCoreCLI@2
     inputs:
       command: 'publish'
       publishWebProjects: false
-      arguments: '--runtime win-x64'
+      arguments:'-c Release --runtime win-x64'
   
   - task: DotNetCoreCLI@2
     inputs:
       command: 'publish'
       publishWebProjects: false
-      arguments: '--runtime win-x86'
+      arguments:'-c Reléase --runtime win-x86'
   
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack' 
