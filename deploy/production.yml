@@ -33,7 +33,35 @@ steps:
       vstsFeed: '$(default-feed)'      
       versioningScheme: byBuildNumber
 
-
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '--runtime linux-musl-x64'
+  
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '--runtime linux-x64'
+  
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '--runtime osx-x64'
+  
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '--runtime win-x64'
+  
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '--runtime win-x86'
   
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack' 
