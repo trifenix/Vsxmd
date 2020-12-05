@@ -6,13 +6,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <DocumentationFile>Vsxmd.xml</DocumentationFile>
   </PropertyGroup>
-  
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.json" Version="12.0.3" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-beta.61">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -21,19 +20,25 @@
   </ItemGroup>
   <!-- NuGet Metadata: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#nuget-metadata-properties -->
   <PropertyGroup>
-    <Title>Doc2AdobeMd fork: Vsxmd</Title>
+    <Title>Vsxmd</Title>
     <Version>0.0.0</Version>
-    <Authors>trifenix - (Junle Li, Sales Lessa Lopes)</Authors>
-    <Description>Generación de código a markdowwns de adobe (https://github.com/adobe/gatsby-theme-aio)</Description>    
+    <Authors>Junle Li, Sales Lessa Lopes</Authors>
+    <Description>VS XML documentation -&gt; Markdown syntax.</Description>
+    <Copyright>Copyright 2015-Present</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/trifenix/Vsxmd</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/lijunle/Vsxmd</PackageProjectUrl>
     <PackageTags>Vsxmd VS XML document Markdown</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
   <ItemGroup>
-   
+    <!-- The parameter _PackageFiles is declared in NuGet.Build.Tasks.Pack.targets -->
+    <_PackageFiles Include="bin\$(Configuration)\$(TargetFramework)\linux-musl-x64\publish\Vsxmd" PackagePath="tools\linux-musl-x64\" />
+    <_PackageFiles Include="bin\$(Configuration)\$(TargetFramework)\linux-x64\publish\Vsxmd" PackagePath="tools\linux-x64\" />
+    <_PackageFiles Include="bin\$(Configuration)\$(TargetFramework)\osx-x64\publish\Vsxmd" PackagePath="tools\osx-x64\" />
+    <_PackageFiles Include="bin\$(Configuration)\$(TargetFramework)\win-x64\publish\Vsxmd.exe" PackagePath="tools\win-x64\" />
+    <_PackageFiles Include="bin\$(Configuration)\$(TargetFramework)\win-x86\publish\Vsxmd.exe" PackagePath="tools\win-x86\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\LICENSE" Link="LICENSE" PackagePath="\" />
