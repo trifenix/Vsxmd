@@ -43,7 +43,7 @@ steps:
     inputs:
       command: 'publish'
       publishWebProjects: false
-      arguments: '-c Release -runtime linux-x64'
+      arguments: '-c Release --runtime linux-x64'
   
   - task: DotNetCoreCLI@2
     inputs:
