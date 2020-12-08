@@ -34,7 +34,11 @@ steps:
       versioningScheme: byBuildNumber
 
   - script : |
-      mkdir -p ./bin/$(BuildConfiguration)/netcoreapp3.1/linux-musl-x64/publish/
+      cd Vsxmd
+    displayName: 'pwd'
+
+  - script : |
+      mkdir -p ./bin/$(BuildConfiguration)/netcoreapp3.1/linux-musl-x64/publish/   
     displayName: 'creando carpetas para linux musl'
 
   - script : |
