@@ -37,51 +37,43 @@ steps:
       mkdir -p ./bin/Release/netcoreapp3.1/linux-musl-x64/publish/
     displayName: 'creando carpetas para linux musl'
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'publish'
-      publishWebProjects: false
-      arguments: '-c Release --runtime linux-musl-x64'
+  - script : |
+      dotnet publish -c Release --runtime linux-musl-x64
+    displayName: 'publish linux musl'
   
   - script : |
       mkdir -p ./bin/Release/netcoreapp3.1/linux-x64/publish/
     displayName: 'creando carpetas para linux 64'
   
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'publish'
-      publishWebProjects: false
-      arguments: '-c Release --runtime linux-x64'
+  - script : |
+      dotnet publish -c Release --runtime linux-x64
+    displayName: 'publish linux 64'
 
   - script : |
       mkdir -p ./bin/Release/netcoreapp3.1/osx-x64/publish/
     displayName: 'creando carpetas para osx-x64'
+
+   - script : |
+      dotnet publish -c Release --runtime osx-x64
+    displayName: 'publish osx-x64'
   
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'publish'
-      publishWebProjects: false
-      arguments: '-c Release --runtime osx-x64'
+  
 
   - script : |
       mkdir -p ./bin/Release/netcoreapp3.1/win-x64/publish/
     displayName: 'creando carpetas para win-x64'
   
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'publish'
-      publishWebProjects: false
-      arguments: '-c Release --runtime win-x64'
+  - script : |
+      dotnet publish -c Release --runtime win-x64
+    displayName: 'publish win-x64'
 
   - script : |
       mkdir -p ./bin/Release/netcoreapp3.1/win-x86/publish/
     displayName: 'creando carpetas para win-x86'
   
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'publish'
-      publishWebProjects: false
-      arguments: '-c Reléase --runtime win-x86'
+  - script : |
+      dotnet publish -c Release --runtime win-x86
+    displayName: 'creando carpetas para win-x86'
   
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack' 
