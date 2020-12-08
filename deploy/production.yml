@@ -38,6 +38,7 @@ steps:
     displayName: 'pwd'
 
   - script : |
+      pwd
       mkdir -p ./bin/$(BuildConfiguration)/netcoreapp3.1/linux-musl-x64/publish/   
     displayName: 'creando carpetas para linux musl'
 
