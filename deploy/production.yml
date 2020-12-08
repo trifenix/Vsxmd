@@ -78,7 +78,7 @@ steps:
     inputs: 
       command: pack
       packagesToPack: '**/Vsxmd.csproj'       
-      arguments: '--configuration $(BuildConfiguration) /p:Version=$(SemVer)' 
+      arguments: '-c Release --configuration $(BuildConfiguration) /p:Version=$(SemVer)' 
       versioningScheme: byEnvVar 
       versionEnvVar: SemVer
 
