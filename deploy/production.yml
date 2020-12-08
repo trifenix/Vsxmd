@@ -53,7 +53,7 @@ steps:
       mkdir -p ./bin/Release/netcoreapp3.1/osx-x64/publish/
     displayName: 'creando carpetas para osx-x64'
 
-   - script : |
+  - script : |
       dotnet publish -c Release --runtime osx-x64
     displayName: 'publish osx-x64'
     
