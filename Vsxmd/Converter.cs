@@ -20,7 +20,7 @@ namespace Vsxmd
         {
             var sb = new StringBuilder();
             sb.AppendLine("---");
-            sb.AppendLine($"title : {header}");
+            sb.AppendLine($"title : {header.Replace("_T","<T>")}");
             sb.AppendLine($"description: {header2}");
             sb.AppendLine("---");
             sb.AppendLine();
@@ -30,6 +30,9 @@ namespace Vsxmd
             sb.AppendLine();
             sb.AppendLine("## Descripción");
             sb.AppendLine($"{description}");
+
+        
+            
             sb.AppendLine("## Constructores");
             sb.AppendLine();
             if (!string.IsNullOrWhiteSpace(ctors))

@@ -186,7 +186,7 @@ namespace Vsxmd
                     path = $"/nuget-packages/{idPackage}/",
                     pages = dict.Select(d => new
                     {
-                        title = d.Key.Split(".").Last(),
+                        title = d.Key.Split(".").Last().Replace("_T","<T>"),
                         path = d.Value,
                     }).ToArray(),
 
