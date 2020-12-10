@@ -26,7 +26,11 @@ namespace Vsxmd
             sb.AppendLine();
             sb.AppendLine();
             sb.AppendLine();
-            sb.AppendLine($"# {header}");
+            sb.AppendLine("<CodeBlock slots = 'heading, code' repeat = '1' languages = 'C#' />");
+            sb.AppendLine("#### Clase");
+            sb.AppendLine($"```");
+            sb.AppendLine($"{header}");
+            sb.AppendLine($"```");
             sb.AppendLine();
             sb.AppendLine("## Descripción");
             sb.AppendLine($"{description}");

@@ -16,6 +16,8 @@ namespace Vsxmd
     using System.Text;
     using System.Xml.Linq;
     using Vsxmd.Units;
+
+
     /// <summary>
     /// Program entry.
     /// </summary>
@@ -88,16 +90,14 @@ namespace Vsxmd
         {
             try
             {
-                if (args == null || args.Length < 1)
+                if (args == null || args.Length < 2)
                 {
                     return;
                 }
                 string xmlPath = args[0];
-
-
+                var folderDestination = args[1];
+                string folderDestionation = args.ElementAtOrDefault(1);
                 var dict = new Dictionary<string, string>();
-
-
 
                 string markdownPath = args.ElementAtOrDefault(1);
 
@@ -127,14 +127,14 @@ namespace Vsxmd
                 var devops_url = propertyGroups.Element("devopsUrl").Value;
                 var github_url = propertyGroups.Element("RepositoryUrl").Value;
                 var relasebadge_url = propertyGroups.Element("releaseBadgeUrl").Value;
-                var mainMarkdown = Path.Combine(baseXmlPath, $"nuget-packages/{idPackage}/index.md");
+                var mainMarkdown = Path.Combine(baseXmlPath, $"{folderDestionation}/{idPackage}/index.md");
                 var baseMarkdown = Path.GetDirectoryName(mainMarkdown);
 
                 Directory.CreateDirectory(baseMarkdown);
 
                 File.WriteAllText(mainMarkdown, MainPagePackage(package_title, package_description, package_summary, main_icon, nuget_url, github_url, devops_url, relasebadge_url));
 
-                dict.Add("Descripción", $"/nuget-packages/{idPackage}/");
+                dict.Add("Descripción", $"/{folderDestionation}/{idPackage}/");
 
                 var members = document.Root.Element("members");
                 var elementMembers = members.Elements("member");
@@ -154,14 +154,10 @@ namespace Vsxmd
                     var fld = Path.GetDirectoryName(md);
                     Directory.CreateDirectory(fld);
                     File.WriteAllText(md, MainNamespace(title, nsms, summary));
-                    dict.Add(nsms, $"/nuget-packages/{idPackage}/{nsms}/");
+                    dict.Add(nsms, $"/{folderDestionation}/{idPackage}/{nsms}/");
 
                 }
-
-
-
                 var typesWithoutNamespace = types.Where(s => !s.Attribute("name").Value.ToLower().Contains("namespace"));
-
 
                 var converter = new Converter(document);
 
@@ -173,17 +169,17 @@ namespace Vsxmd
                     Directory.CreateDirectory(folder);
                     var file = Path.Combine(folder, "index.md");
                     File.WriteAllText(file, item.Value);
-                    dict.Add(item.Key, $"/nuget-packages/{idPackage}/{item.Key}/");
+                    dict.Add(item.Key, $"/{folderDestionation}/{idPackage}/{item.Key}/");
                 }
 
-                //generate json
+                // generate json
 
                 var ordered = dict.OrderBy(s => s.Value);
 
                 var jsn = new
                 {
                     title = package_title,
-                    path = $"/nuget-packages/{idPackage}/",
+                    path = $"/{folderDestionation}/{idPackage}/",
                     pages = dict.Select(d => new
                     {
                         title = d.Key.Split(".").Last().Replace("_T","<T>"),
@@ -195,10 +191,7 @@ namespace Vsxmd
                 var sw = new StringWriter();
 
                 var writer = new JsonTextWriter(sw);
-                //writer.QuoteName = false;
                 writer.Formatting = Formatting.Indented;
-                
-
                 new JsonSerializer().Serialize(writer, jsn);
 
                 var sb = new StringBuilder();

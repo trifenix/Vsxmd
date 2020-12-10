@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Vsxmd": {
+      "commandName": "Project",
+      "commandLineArgs": "c:\\tmp\\trifenix-main.xml otro"
+    }
+  }
+}
