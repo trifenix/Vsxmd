@@ -1,11 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- Project Metadata -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <DocumentationFile>Vsxmd.xml</DocumentationFile>
+    <Configurations>Debug;Release;wsl2;WSL 2</Configurations>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="launchSettings.json" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.2">
       <PrivateAssets>all</PrivateAssets>
@@ -31,6 +35,7 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <!-- The parameter _PackageFiles is declared in NuGet.Build.Tasks.Pack.targets -->
@@ -58,5 +63,6 @@
     </PropertyGroup>
   </Target>
   <Import Project="$(MSBuildThisFileDirectory)\build\Vsxmd.targets" />
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

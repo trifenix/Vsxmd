@@ -42,7 +42,7 @@ steps:
 
   - script : |
       cd Vsxmd
-      dotnet publish -c $(BuildConfiguration) --runtime linux-musl-x64
+      dotnet publish -c $(BuildConfiguration) /p:PublishSingleFile=true /p:PublishTrimmed=true --verbosity normal --runtime linux-musl-x64
     displayName: 'publish linux musl'
   
   - script : |
@@ -52,7 +52,7 @@ steps:
   
   - script : |
       cd Vsxmd
-      dotnet publish -c $(BuildConfiguration) --runtime linux-x64
+      dotnet publish -c $(BuildConfiguration) /p:PublishSingleFile=true /p:PublishTrimmed=true --verbosity normal --runtime linux-x64
     displayName: 'publish linux 64'
 
   - script : |
@@ -62,7 +62,7 @@ steps:
 
   - script : |
       cd Vsxmd
-      dotnet publish -c $(BuildConfiguration) --runtime osx-x64
+      dotnet publish -c $(BuildConfiguration) /p:PublishSingleFile=true /p:PublishTrimmed=true --verbosity normal --runtime osx-x64
     displayName: 'publish osx-x64'
     
   - script : |
@@ -72,7 +72,7 @@ steps:
   
   - script : |
       cd Vsxmd
-      dotnet publish -c $(BuildConfiguration) --runtime win-x64
+      dotnet publish -c $(BuildConfiguration) /p:PublishSingleFile=true /p:PublishTrimmed=true --verbosity normal --runtime win-x64
     displayName: 'publish win-x64'
 
   - script : |
@@ -82,7 +82,7 @@ steps:
   
   - script : |
       cd Vsxmd
-      dotnet publish -c $(BuildConfiguration) --runtime win-x86
+      dotnet publish -c $(BuildConfiguration) /p:PublishSingleFile=true /p:PublishTrimmed=true --verbosity normal --runtime win-x86
     displayName: 'creando carpetas para win-x86'
   
   - task: DotNetCoreCLI@2
@@ -90,7 +90,7 @@ steps:
     inputs: 
       command: pack
       packagesToPack: '**/Vsxmd.csproj'       
-      arguments: '-c $(BuildConfiguration) /p:Version=$(SemVer)' 
+      arguments: '-c $(BuildConfiguration) /p:Version=$(SemVer)  --no-restore --no-build' 
       versioningScheme: byEnvVar 
       versionEnvVar: SemVer
 
@@ -100,3 +100,5 @@ steps:
       artifactName: drop
       publishLocation: 'container'
     displayName: "publish nuget"
+  
+  
