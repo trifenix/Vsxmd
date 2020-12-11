@@ -6,8 +6,11 @@
 
 namespace Vsxmd
 {
-    using Newtonsoft.Json;
+    
     using System;
+    
+
+    using System.Runtime.Serialization.Json;    
   using System.Collections.Generic;
   using System.Globalization;
     using System.IO;
@@ -16,19 +19,31 @@ namespace Vsxmd
     using System.Text;
     using System.Xml.Linq;
     using Vsxmd.Units;
+  using System.Runtime.Serialization;
 
 
-    /// <summary>
-    /// Program entry.
-    /// </summary>
-    /// <remarks>
-    /// Usage syntax:
-    /// <code>Vsxmd.exe &lt;input-XML-path&gt; [output-Markdown-path]</code>
-    /// <para>The <c>input-XML-path</c> argument is required. It references to the VS generated XML documentation file.</para>
-    /// <para>The <c>output-Markdown-path</c> argument is optional. It indicates the file path for the Markdown output file. When not specific, it will be a <c>.md</c> file with same file name as the XML documentation file, path at the XML documentation folder.</para>
-    /// </remarks>
-    internal static class Program
+
+
+  /// <summary>
+  /// Program entry.
+  /// </summary>
+  /// <remarks>
+  /// Usage syntax:
+  /// <code>Vsxmd.exe &lt;input-XML-path&gt; [output-Markdown-path]</code>
+  /// <para>The <c>input-XML-path</c> argument is required. It references to the VS generated XML documentation file.</para>
+  /// <para>The <c>output-Markdown-path</c> argument is optional. It indicates the file path for the Markdown output file. When not specific, it will be a <c>.md</c> file with same file name as the XML documentation file, path at the XML documentation folder.</para>
+  /// </remarks>
+  internal static class Program
     {
+        internal static string Serialize<T>(T instance) where T : class
+        {
+            var serializer = new DataContractJsonSerializer(typeof(T));
+            using (var stream = new MemoryStream())
+            {
+                serializer.WriteObject(stream, instance);
+                return Encoding.Default.GetString(stream.ToArray());
+            }
+        }
 
         public static string MainPagePackage(string header, string description, string summary, string package_icon, string nugeturl, string githuburl, string devopsurl, string badge = "") {
             var sb = new StringBuilder();
@@ -176,29 +191,23 @@ namespace Vsxmd
 
                 var ordered = dict.OrderBy(s => s.Value);
 
-                var jsn = new
+                var jsn = new Jsn
                 {
                     title = package_title,
                     path = $"/{folderDestionation}/{idPackage}/",
-                    pages = dict.Select(d => new
+                    pages = dict.Select(d => new Jsn
                     {
                         title = d.Key.Split(".").Last().Replace("_T","<T>"),
                         path = d.Value,
-                    }).ToArray(),
+                    }).ToList(),
 
                 };
 
-                var sw = new StringWriter();
-
-                var writer = new JsonTextWriter(sw);
-                writer.Formatting = Formatting.Indented;
-                new JsonSerializer().Serialize(writer, jsn);
-
-                var sb = new StringBuilder();
+                
                 
 
 
-                File.WriteAllText(Path.Combine(baseMarkdown,"menu.json"), sw.ToString());
+                File.WriteAllText(Path.Combine(baseMarkdown,"menu.json"), Serialize(jsn));
 
             }
             catch (Exception e)
@@ -207,6 +216,22 @@ namespace Vsxmd
                 // Ignore errors. Do not impact on project build
                 return;
             }
+        }
+
+        [DataContract]
+        public class Jsn{
+
+            [DataMember]
+            public string title { get; set; }
+
+            [DataMember]
+            public string path { get; set; }
+
+            [DataMember]
+            public List<Jsn> pages { get; set; }
+            
+            
+
         }
         private class Test
         {
