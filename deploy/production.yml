@@ -41,6 +41,7 @@ steps:
       feedsToUse: 'select'
       vstsFeed: '$(default-feed)'      
       arguments: "-c Release"
+    displayName: "build"
 
   - task: DotNetCoreCLI@2
     inputs:      
@@ -50,8 +51,9 @@ steps:
       zipAfterPublish: true
       artifactName: "-c Release"
 
+
   - script: |
-      ls $(Build.SourcesDirectory)/Vsxmd/bin/Debug/netcoreapp3.1/publish
+      ls $(Build.SourcesDirectory)/Vsxmd/bin/Release/netcoreapp3.1/
       sudo apt install -y zip      
       zip  Vsxmd.$(SemVer).zip $(Build.SourcesDirectory)/Vsxmd/bin/Debug/netcoreapp3.1/publish
       git config --global user.email "alejandro.iglesias@trifenix.io"
