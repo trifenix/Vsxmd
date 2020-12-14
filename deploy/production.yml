@@ -55,7 +55,7 @@ steps:
   - script: |
       ls $(Build.SourcesDirectory)/Vsxmd/bin/Release/netcoreapp3.1/
       sudo apt install -y zip      
-      zip  Vsxmd.$(SemVer).zip $(Build.SourcesDirectory)/Vsxmd/bin/Debug/netcoreapp3.1/publish
+      zip  Vsxmd.$(SemVer).zip $(Build.SourcesDirectory)/Vsxmd/bin/Release/netcoreapp3.1/
       git config --global user.email "alejandro.iglesias@trifenix.io"
       git config --global user.name "alejandro.iglesias"    
       git clone https://alejandro.iglesias:$(script-token)@github.com/trifenix/scripts.git web
