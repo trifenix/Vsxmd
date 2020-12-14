@@ -16,7 +16,7 @@ steps:
   - task: gitversion/setup@0
     inputs:
       versionSpec: '5.1'
-      includePrerRelease: false
+      includePrerelease: false
     displayName : "Configurando gitversion"
 
   - task: gitversion/execute@0
@@ -35,7 +35,9 @@ steps:
 
   - task: DotNetCoreCLI@2
     inputs:
-      command: 'build'
+      command: 'publish'
+      publishWebProjects: false
+      zipAfterPublish: false
 
   - task: PublishBuildArtifacts@1
     inputs:
