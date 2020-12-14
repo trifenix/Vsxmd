@@ -32,16 +32,22 @@ steps:
       feedsToUse: 'select'
       vstsFeed: '$(default-feed)'      
       versioningScheme: byBuildNumber
-      
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'Build'
+      projects: 'Vsxmd/*.csproj'
+      feedsToUse: 'select'
+      vstsFeed: '$(default-feed)'      
+      arguments: "-c Release"
 
   - task: DotNetCoreCLI@2
     inputs:      
       command: 'publish'
-      projects: 'Vsxmd/*.csproj'
-      BuildConfiguration: "release"
+      projects: 'Vsxmd/*.csproj'     
       publishWebProjects: false
       zipAfterPublish: false
-      artifactName: "-c release"
+      artifactName: "-c Release"
 
   - task: CopyFiles@2
     inputs : 
