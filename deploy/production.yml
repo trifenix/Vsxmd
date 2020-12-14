@@ -48,24 +48,15 @@ steps:
       publishWebProjects: false
       zipAfterPublish: false
       artifactName: "-c Release"
-
-  - task: CopyFiles@2
-    inputs : 
-      sourceFolder : "$(Build.SourcesDirectory)/Vsxmd/bin/Release/netcoreapp3.1/"
-      contents: "Vsxmd.dll"
-      targetFolder: "$(Build.ArtifactStagingDirectory)"
-  
-  - task: CmdLine@2
-    inputs:
-      script: "mv Vsxmd.dll Vsxmd.$(SemVer).dll"
-      workingDirectory : "$(Build.ArtifactStagingDirectory)"
-
+      
   - script: |
+      cd $(Build.SourcesDirectory)/Vsxmd/bin/Release/netcoreapp3.1/
+      mv Vsxmd.dll Vsxmd.$(SemVer).dll
       git config --global user.email "alejandro.iglesias@trifenix.io"
       git config --global user.name "alejandro.iglesias"
       git clone https://alejandro.iglesias:$(script-token)@github.com/trifenix/scripts.git web
       mkdir ./web/static/vsxmd/
-      cp Vsxmd.$(SemVer).dll ./web/static/msxmd/
+      cp Vsxmd.$(SemVer).dll ./web/static/vsxmd/
       cd ./web
       git add . && git commit -m "generación automática de Vsxmd.$(SemVer).dll"
       git push origin master
@@ -73,11 +64,6 @@ steps:
     displayName: "publicando en github"
 
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: "$(Build.ArtifactStagingDirectory)"
-      artifactName: drop
-      publishLocation: 'container'
-    displayName: "publish nuget"
+
   
   
