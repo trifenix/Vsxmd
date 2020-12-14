@@ -51,6 +51,8 @@ steps:
 
   - script: |
       ls
+      cd Vsxmd
+      ls
       cd $(Build.SourcesDirectory)/Vsxmd/bin/Release/netcoreapp3.1/
       mv Vsxmd.zip Vsxmd.$(SemVer).zip
       git config --global user.email "alejandro.iglesias@trifenix.io"
