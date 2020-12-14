@@ -32,6 +32,7 @@ steps:
       feedsToUse: 'select'
       vstsFeed: '$(default-feed)'      
       versioningScheme: byBuildNumber
+      
 
   - task: DotNetCoreCLI@2
     inputs:      
@@ -40,6 +41,7 @@ steps:
       BuildConfiguration: "release"
       publishWebProjects: false
       zipAfterPublish: false
+      artifactName: "-c release"
 
   - task: CopyFiles@2
     inputs : 
