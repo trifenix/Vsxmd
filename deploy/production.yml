@@ -51,8 +51,17 @@ steps:
 
   - task: CopyFiles@2
     inputs : 
-      sourceFolder : "$(Build.SourcesDirectory)/Vsxmd/bin/"
+      sourceFolder : "$(Build.SourcesDirectory)/Vsxmd/bin/Release/netcoreapp3.1/"
+      contents: "Vsxmd.dll"
       targetFolder: "$(Build.ArtifactStagingDirectory)"
+  
+  - task: CmdLine@2
+    inputs:
+      script: "mv Vsxmd.dll Vsxmd.$(SemVer).dll"
+      workingDirectory : "$(Build.ArtifactStagingDirectory)"
+
+      
+
 
   - task: PublishBuildArtifacts@1
     inputs:
