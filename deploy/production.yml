@@ -32,6 +32,7 @@ steps:
       feedsToUse: 'select'
       vstsFeed: '$(default-feed)'      
       versioningScheme: byBuildNumber
+    displayName: "Restore package"
 
   - task: DotNetCoreCLI@2
     inputs:
@@ -50,11 +51,11 @@ steps:
       artifactName: "-c Release"
 
   - script: |
-      apt install -y zip      
+      ls $(Build.SourcesDirectory)/Vsxmd/bin/Debug/netcoreapp3.1/publish
+      sudo apt install -y zip      
       zip  Vsxmd.$(SemVer).zip $(Build.SourcesDirectory)/Vsxmd/bin/Debug/netcoreapp3.1/publish
       git config --global user.email "alejandro.iglesias@trifenix.io"
-      git config --global user.name "alejandro.iglesias"
-    
+      git config --global user.name "alejandro.iglesias"    
       git clone https://alejandro.iglesias:$(script-token)@github.com/trifenix/scripts.git web
       mkdir -p ./web/static/vsxmd/      
       cp Vsxmd.$(SemVer).zip ./web/static/vsxmd/
