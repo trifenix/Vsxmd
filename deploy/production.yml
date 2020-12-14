@@ -28,19 +28,22 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: 'restore'
-      projects: '**/*.csproj'
+      projects: 'Vsxmd/*.csproj'
       feedsToUse: 'select'
       vstsFeed: '$(default-feed)'      
       versioningScheme: byBuildNumber
 
   - task: DotNetCoreCLI@2
-    inputs:
+    inputs:      
       command: 'publish'
+      projects: 'Vsxmd/*.csproj'
+      BuildConfiguration: "release"
       publishWebProjects: false
       zipAfterPublish: false
 
   - task: CopyFiles@2
     inputs : 
+      sourceFolder : "$(Build.SourcesDirectory)/Vsxmd/bin/"
       targetFolder: "$(Build.ArtifactStagingDirectory)"
 
   - task: PublishBuildArtifacts@1
