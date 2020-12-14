@@ -52,15 +52,12 @@ steps:
   - script: |
       cd $(Build.SourcesDirectory)/Vsxmd/bin/Release/netcoreapp3.1/
       ls
-      mv Vsxmd.zip Vsxmd.$(SemVer).zip
-      git config --global user.email "alejandro.iglesias@trifenix.io"
-      git config --global user.name "alejandro.iglesias"
-      git clone https://alejandro.iglesias:$(script-token)@github.com/trifenix/scripts.git web
-      mkdir ./web/static/vsxmd/
-      cp Vsxmd.$(SemVer).zip ./web/static/vsxmd/
-      cd ./web
-      git add . && git commit -m "generación automática de Vsxmd.$(SemVer).zip"
-      git push origin master
+      cd Debug
+      ls
+      cd publish
+      ls
+      
+      
 
     displayName: "publicando en github"
 
