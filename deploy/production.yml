@@ -46,22 +46,25 @@ steps:
       command: 'publish'
       projects: 'Vsxmd/*.csproj'     
       publishWebProjects: false
-      zipAfterPublish: false
+      zipAfterPublish: true
       artifactName: "-c Release"
-      
+
   - script: |
       cd $(Build.SourcesDirectory)/Vsxmd/bin/Release/netcoreapp3.1/
-      mv Vsxmd.dll Vsxmd.$(SemVer).dll
+      ls
+      mv Vsxmd.zip Vsxmd.$(SemVer).zip
       git config --global user.email "alejandro.iglesias@trifenix.io"
       git config --global user.name "alejandro.iglesias"
       git clone https://alejandro.iglesias:$(script-token)@github.com/trifenix/scripts.git web
       mkdir ./web/static/vsxmd/
-      cp Vsxmd.$(SemVer).dll ./web/static/vsxmd/
+      cp Vsxmd.$(SemVer).zip ./web/static/vsxmd/
       cd ./web
-      git add . && git commit -m "generación automática de Vsxmd.$(SemVer).dll"
+      git add . && git commit -m "generación automática de Vsxmd.$(SemVer).zip"
       git push origin master
 
     displayName: "publicando en github"
+
+  
 
 
 
