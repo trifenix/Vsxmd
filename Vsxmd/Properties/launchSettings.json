@@ -1,8 +1,19 @@
 {
+  "WSL 2": {
+    "commandName": "WSL2",
+    "launchBrowser": false,
+    "distributionName": "",
+    "workingDirectory": "/code/Vsxmd/Vsxmd"
+  },
   "profiles": {
     "Vsxmd": {
       "commandName": "Project",
-      "commandLineArgs": "c:\\tmp\\trifenix-main.xml otro"
+      "commandLineArgs": "C:\\tmp\\trifenix-main.xml nuget-packages"
+    },
+    "WSL 2": {
+      "commandName": "WSL2",
+      "commandLineArgs": "/code/parameters/trifenix-main.csproj",
+      "distributionName": ""
     }
   }
 }

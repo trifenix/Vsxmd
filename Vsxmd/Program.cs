@@ -160,6 +160,8 @@ namespace Vsxmd
 
                 foreach (var m in namespaces)
                 {
+
+                    // las member names comienzan con T:elnombre de la clase
                     var splt = m.Attribute("name").Value.Split(":")[1].ToLower().Replace(".namespace","").Split(".");
                     var nsms = splt.Join(".");
                     var summary = m.Element("summary").Value;
