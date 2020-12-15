@@ -74,6 +74,20 @@ namespace Vsxmd.Units
             ? $"[{this.FriendlyName.Escape()}({this.paramNames.Join(",")})](#{this.Href} '{this.StrippedName}')"
             : string.Empty;
 
+
+
+        internal string ToCaption(string caption) {
+            var sb = new StringBuilder();
+            sb.AppendLine();
+            sb.AppendLine("<CodeBlock slots = 'heading, code' repeat = '1' languages = 'C#' />");
+            sb.AppendLine();
+            sb.AppendLine("#### Clase");
+            sb.AppendLine($"```");
+            sb.AppendLine($"{caption}");
+            sb.AppendLine($"```");
+            sb.AppendLine();
+            return sb.ToString();
+        }
         /// <summary>
         /// Gets the caption representation for this member name.
         /// </summary>
@@ -84,13 +98,13 @@ namespace Vsxmd.Units
         /// </example>
         internal string Caption =>
             this.Kind == MemberKind.Type
-            ? $"### {this.FriendlyName.Escape()}"
+            ? $"{ToCaption(this.FriendlyName.Escape())}"
             : this.Kind == MemberKind.Constants ||
               this.Kind == MemberKind.Property
-            ? $"### {this.FriendlyName.Escape()}"
+            ? $"{ToCaption(this.FriendlyName.Escape())}"
             : this.Kind == MemberKind.Constructor ||
               this.Kind == MemberKind.Method
-            ? $"### {this.FriendlyName.Escape()}({this.paramNames.Join(",")})"
+            ? ToCaption($"{this.FriendlyName.Escape()}({this.paramNames.Join(",")})")
             : string.Empty;
 
         /// <summary>

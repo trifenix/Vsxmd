@@ -20,16 +20,24 @@ namespace Vsxmd
         {
             var sb = new StringBuilder();
             sb.AppendLine("---");
-            sb.AppendLine($"title : {header}");
+            sb.AppendLine($"title : {header.Replace("_T","<T>")}");
             sb.AppendLine($"description: {header2}");
             sb.AppendLine("---");
             sb.AppendLine();
             sb.AppendLine();
             sb.AppendLine();
-            sb.AppendLine($"# {header}");
+            sb.AppendLine("<CodeBlock slots = 'heading, code' repeat = '1' languages = 'C#' />");
+            sb.AppendLine();
+            sb.AppendLine("#### Clase");
+            sb.AppendLine($"```");
+            sb.AppendLine($"{header}");
+            sb.AppendLine($"```");
             sb.AppendLine();
             sb.AppendLine("## Descripción");
             sb.AppendLine($"{description}");
+
+        
+            
             sb.AppendLine("## Constructores");
             sb.AppendLine();
             if (!string.IsNullOrWhiteSpace(ctors))
@@ -122,12 +130,12 @@ namespace Vsxmd
                 var funcMd = item.Where(s => s.Kind == MemberKind.Method).SelectMany(s=>s.ToMarkdown()).Join("\n");
                 var propsMd = item.Where(s => s.Kind == MemberKind.Property).SelectMany(s => s.ToMarkdown()).Join("\n");
                 var constantsMd = item.Where(s => s.Kind == MemberKind.Constants).SelectMany(s => s.ToMarkdown()).Join("\n");
-                localdict.Add(TakeOffComma(classItem.TypeName), GetClassMd(TakeOffComma(classItem.name.TypeShortName), classItem.TypeName, classItem.Summary.Join("\n"), ctorMd, constantsMd, propsMd, funcMd));
+                localdict.Add(classItem.TypeName.Replace("`1", "_T"), GetClassMd(TakeOffComma(classItem.name.TypeShortName), classItem.TypeName, classItem.Summary.Join("\n"), ctorMd, constantsMd, propsMd, funcMd));
             }
 
             return localdict;
         }
-        public static string TakeOffComma(string element) => element.Replace("`1", "_T");
+        public static string TakeOffComma(string element) => element.Replace("`1", "<T>");
 
 
         private static IEnumerable<IGrouping<string, MemberUnit>> ToUnits(XElement docElement)

@@ -16,7 +16,7 @@ steps:
   - task: gitversion/setup@0
     inputs:
       versionSpec: '5.1'
-      includePrerRelease: false
+      includePrerelease: false
     displayName : "Configurando gitversion"
 
   - task: gitversion/execute@0
@@ -28,75 +28,48 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: 'restore'
-      projects: '**/*.csproj'
+      projects: 'Vsxmd/*.csproj'
       feedsToUse: 'select'
       vstsFeed: '$(default-feed)'      
       versioningScheme: byBuildNumber
+    displayName: "Restore package"
 
-  
-
-  - script : |
-      cd Vsxmd
-      mkdir -p ./bin/$(BuildConfiguration)/netcoreapp3.1/linux-musl-x64/publish/   
-    displayName: 'creando carpetas para linux musl'
-
-  - script : |
-      cd Vsxmd
-      dotnet publish -c $(BuildConfiguration) --runtime linux-musl-x64
-    displayName: 'publish linux musl'
-  
-  - script : |
-      cd Vsxmd
-      mkdir -p ./bin/$(BuildConfiguration)/netcoreapp3.1/linux-x64/publish/
-    displayName: 'creando carpetas para linux 64'
-  
-  - script : |
-      cd Vsxmd
-      dotnet publish -c $(BuildConfiguration) --runtime linux-x64
-    displayName: 'publish linux 64'
-
-  - script : |
-      cd Vsxmd
-      mkdir -p ./bin/$(BuildConfiguration)/netcoreapp3.1/osx-x64/publish/
-    displayName: 'creando carpetas para osx-x64'
-
-  - script : |
-      cd Vsxmd
-      dotnet publish -c $(BuildConfiguration) --runtime osx-x64
-    displayName: 'publish osx-x64'
-    
-  - script : |
-      cd Vsxmd
-      mkdir -p ./bin/$(BuildConfiguration)/netcoreapp3.1/win-x64/publish/
-    displayName: 'creando carpetas para win-x64'
-  
-  - script : |
-      cd Vsxmd
-      dotnet publish -c $(BuildConfiguration) --runtime win-x64
-    displayName: 'publish win-x64'
-
-  - script : |
-      cd Vsxmd
-      mkdir -p ./bin/$(BuildConfiguration)/netcoreapp3.1/win-x86/publish/
-    displayName: 'creando carpetas para win-x86'
-  
-  - script : |
-      cd Vsxmd
-      dotnet publish -c $(BuildConfiguration) --runtime win-x86
-    displayName: 'creando carpetas para win-x86'
-  
   - task: DotNetCoreCLI@2
-    displayName: 'dotnet pack' 
-    inputs: 
-      command: pack
-      packagesToPack: '**/Vsxmd.csproj'       
-      arguments: '-c $(BuildConfiguration) /p:Version=$(SemVer)' 
-      versioningScheme: byEnvVar 
-      versionEnvVar: SemVer
-
-  - task: PublishBuildArtifacts@1
     inputs:
-      pathtoPublish: "$(Build.ArtifactStagingDirectory)"
-      artifactName: drop
-      publishLocation: 'container'
-    displayName: "publish nuget"
+      command: 'build'
+      projects: 'Vsxmd/*.csproj'
+      feedsToUse: 'select'
+      vstsFeed: '$(default-feed)'      
+      arguments: "-c Release"
+    displayName: "build"
+
+  - task: DotNetCoreCLI@2
+    inputs:      
+      command: 'publish'
+      projects: 'Vsxmd/*.csproj'     
+      publishWebProjects: false
+      zipAfterPublish: true
+      artifactName: "-c Release"
+
+
+  - script: |
+      cd $(Build.SourcesDirectory)/Vsxmd/bin/Release/netcoreapp3.1/
+      sudo apt install -y zip      
+      zip -r Vsxmd.$(SemVer).zip ./
+      git config --global user.email "alejandro.iglesias@trifenix.io"
+      git config --global user.name "alejandro.iglesias"    
+      git clone https://alejandro.iglesias:$(script-token)@github.com/trifenix/scripts.git web
+      mkdir -p ./web/static/vsxmd/      
+      cp Vsxmd.$(SemVer).zip ./web/static/vsxmd/
+      cd ./web
+      git add . && git commit -m "generación automática de Vsxmd.$(SemVer).zip"
+      git push origin master
+
+    displayName: "publicando en github"
+
+  
+
+
+
+  
+  
