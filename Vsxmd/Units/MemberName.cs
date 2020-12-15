@@ -78,12 +78,14 @@ namespace Vsxmd.Units
 
         internal string ToCaption(string caption) {
             var sb = new StringBuilder();
+            sb.AppendLine();
             sb.AppendLine("<CodeBlock slots = 'heading, code' repeat = '1' languages = 'C#' />");
             sb.AppendLine();
             sb.AppendLine("#### Clase");
             sb.AppendLine($"```");
             sb.AppendLine($"{caption}");
             sb.AppendLine($"```");
+            sb.AppendLine();
             return sb.ToString();
         }
         /// <summary>
