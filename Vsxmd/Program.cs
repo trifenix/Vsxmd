@@ -160,9 +160,8 @@ namespace Vsxmd
 
                 foreach (var m in namespaces)
                 {
-                    var splt = m.Attribute("name").Value.Split(":")[1].Split(".");
-                    var tk = splt.Count() - 1;
-                    var nsms = splt.Take(tk).Join(".");
+                    var splt = m.Attribute("name").Value.Split(":")[1].ToLower().Replace(".namespace","").Split(".");
+                    var nsms = splt.Join(".");
                     var summary = m.Element("summary").Value;
                     var title = nsms.Split(".").Last();
                     var md = Path.Combine(baseMarkdown, $"{nsms}/index.md");
