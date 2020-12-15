@@ -114,8 +114,8 @@ namespace Vsxmd
             var localdict = new Dictionary<string, string>();
             foreach (var item in grps)
             {                
-                var classItem = item.FirstOrDefault(s => s.Kind == MemberKind.Type);
-                if (classItem.name.TypeShortName.ToLower().Contains("namespace")) break;
+                var classItem = item.FirstOrDefault(s => s.Kind == MemberKind.Type && !s.name.TypeShortName.ToLower().Contains("namespace"));
+                if (classItem == null) break;
 
                 var sb = new StringBuilder();
                 var ctorMd = item.Where(s => s.Kind == MemberKind.Constructor).SelectMany(s => s.ToMarkdown()).Join("\n");
