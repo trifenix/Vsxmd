@@ -20,11 +20,11 @@ namespace Vsxmd
         {
             var sb = new StringBuilder();
             sb.AppendLine("---");
-            sb.AppendLine($"title : {header.Replace("_T","<T>")}");
+            sb.AppendLine($"title : {header.Replace("<T>", "&lt;T&gt;")}");
             sb.AppendLine($"description: {header2}");
             sb.AppendLine("---");
             sb.AppendLine();
-            sb.AppendLine($"# {header.Replace("_T", "&lt;T&gt;")}");
+            sb.AppendLine($"# {header.Replace("<T>", "&lt;T&gt;")}");
             sb.AppendLine();
             sb.AppendLine("<CodeBlock slots = 'heading, code' repeat = '1' languages = 'C#' />");
             sb.AppendLine();
