@@ -8,7 +8,7 @@
   "profiles": {
     "Vsxmd": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\tmp\\trifenix-main.xml nuget-packages"
+      "commandLineArgs": "C:\\Users\\Trifenix\\Source\\Repos\\trifenix\\mdm\\trifenix.connect.mdm.xml nuget-packages"
     },
     "WSL 2": {
       "commandName": "WSL2",

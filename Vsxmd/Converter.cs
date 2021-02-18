@@ -15,16 +15,26 @@ namespace Vsxmd
     /// <inheritdoc/>
     public class Converter : IConverter
     {
-
-        public string GetClassMd(string header, string header2, string description, string ctors, string constants, string props, string funcs)
+        /// <summary>
+        /// Genera MarkDown.
+        /// </summary>
+        /// <param name="header">Pertenece a la cabecera con el nombre sobre el titulo.</param>
+        /// <param name="header2">Correspondiente al nombre de la propiedad en la descripcion.</param>
+        /// <param name="description">Descripcion correspondiente a la entidad.</param>
+        /// <param name="ctors">Correspondiente al constructor.</param>
+        /// <param name="constants">Constantes que la entidad posee.</param>
+        /// <param name="props">Propiedades de la entidad.</param>
+        /// <param name="funcs">Funciones presentes en la entidad.</param>
+        /// <returns>Retorna cadena string con los parametros en conjunto.</returns>
+        public static string GetClassMd(string header, string header2, string description, string ctors, string constants, string props, string funcs)
         {
             var sb = new StringBuilder();
             sb.AppendLine("---");
-            sb.AppendLine($"title : {header.Replace("<T>", "(generics)")}");
+            sb.AppendLine($"title : {header.Replace("_T", "<T>")}");
             sb.AppendLine($"description: {header2}");
             sb.AppendLine("---");
             sb.AppendLine();
-            sb.AppendLine($"# {header.Replace("<T>", "(generics)")}");
+            sb.AppendLine($"# {header.Replace("_T", "<T>")}");
             sb.AppendLine();
             sb.AppendLine("<CodeBlock slots = 'heading, code' repeat = '1' languages = 'C#' />");
             sb.AppendLine();
