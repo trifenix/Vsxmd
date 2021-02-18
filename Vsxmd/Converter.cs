@@ -40,7 +40,7 @@ namespace Vsxmd
             sb.AppendLine();
             sb.AppendLine("#### Clase");
             sb.AppendLine($"```");
-            sb.AppendLine($"{header.Replace("<T>", "(generics)")}");
+            sb.AppendLine($"{header.Replace("_T", "(generics)")}");
             sb.AppendLine($"```");
             sb.AppendLine();
             sb.AppendLine("## Descripción");
