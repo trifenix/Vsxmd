@@ -34,7 +34,7 @@ namespace Vsxmd
             sb.AppendLine($"description: {header2}");
             sb.AppendLine("---");
             sb.AppendLine();
-            sb.AppendLine($"# {header.Replace("<T>", "(generics)")}");
+            sb.AppendLine();
             sb.AppendLine();
             sb.AppendLine("<CodeBlock slots = 'heading, code' repeat = '1' languages = 'C#' />");
             sb.AppendLine();
