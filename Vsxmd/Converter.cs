@@ -147,7 +147,7 @@ namespace Vsxmd
             return localdict;
         }
 
-        public string TakeOffComma(string element) => element.Replace("`1", "<T>");
+        public string TakeOffComma(string element) => element.Replace("`1", "_T");
 
         private static IEnumerable<IGrouping<string, MemberUnit>> ToUnits(XElement docElement)
         {
