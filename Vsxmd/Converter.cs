@@ -30,24 +30,22 @@ namespace Vsxmd
         {
             var sb = new StringBuilder();
             sb.AppendLine("---");
-            sb.AppendLine($"title : {header.Replace("_T", "(generics)")}");
+            sb.AppendLine($"title : {header.Replace("<T>", "(generics)")}");
             sb.AppendLine($"description: {header2}");
             sb.AppendLine("---");
             sb.AppendLine();
-            sb.AppendLine($"# {header.Replace("_T", "(generics)")}");
+            sb.AppendLine($"# {header.Replace("<T>", "(generics)")}");
             sb.AppendLine();
             sb.AppendLine("<CodeBlock slots = 'heading, code' repeat = '1' languages = 'C#' />");
             sb.AppendLine();
             sb.AppendLine("#### Clase");
             sb.AppendLine($"```");
-            sb.AppendLine($"{header.Replace("_T", "(generics)")}");
+            sb.AppendLine($"{header.Replace("<T>", "(generics)")}");
             sb.AppendLine($"```");
             sb.AppendLine();
             sb.AppendLine("## Descripción");
             sb.AppendLine($"{description}");
 
-        
-            
             sb.AppendLine("## Constructores");
             sb.AppendLine();
             if (!string.IsNullOrWhiteSpace(ctors))
@@ -58,6 +56,7 @@ namespace Vsxmd
             {
                 sb.AppendLine("no existen constructores");
             }
+
             sb.AppendLine();
 
             sb.AppendLine();
@@ -73,8 +72,8 @@ namespace Vsxmd
             {
                 sb.AppendLine("no existen funciones");
             }
-            sb.AppendLine();
 
+            sb.AppendLine();
 
             sb.AppendLine("## Propiedades");
             sb.AppendLine();
@@ -86,6 +85,7 @@ namespace Vsxmd
             {
                 sb.AppendLine("no existen propidades");
             }
+
             sb.AppendLine();
 
             sb.AppendLine("## Constantes");
@@ -97,7 +97,6 @@ namespace Vsxmd
             {
                 sb.AppendLine("no existen campos");
             }
-
 
             sb.AppendLine();
             return sb.ToString();
@@ -125,19 +124,21 @@ namespace Vsxmd
         public static Dictionary<string, string> ToMarkdown(XDocument document) =>
             new Converter(document).ToMarkdown();
 
-
-
-        public Dictionary<string, string> ToMarkdown() {
+        public Dictionary<string, string> ToMarkdown()
+        {
             var grps = ToUnits(this.document.Root);
             var localdict = new Dictionary<string, string>();
             foreach (var item in grps)
-            {                
+            {
                 var classItem = item.FirstOrDefault(s => s.Kind == MemberKind.Type && !s.name.TypeShortName.ToLower().Contains("namespace"));
-                if (classItem == null) continue;
+                if (classItem == null)
+                {
+                    continue;
+                }
 
                 var sb = new StringBuilder();
                 var ctorMd = item.Where(s => s.Kind == MemberKind.Constructor).SelectMany(s => s.ToMarkdown()).Join("\n");
-                var funcMd = item.Where(s => s.Kind == MemberKind.Method).SelectMany(s=>s.ToMarkdown()).Join("\n");
+                var funcMd = item.Where(s => s.Kind == MemberKind.Method).SelectMany(s => s.ToMarkdown()).Join("\n");
                 var propsMd = item.Where(s => s.Kind == MemberKind.Property).SelectMany(s => s.ToMarkdown()).Join("\n");
                 var constantsMd = item.Where(s => s.Kind == MemberKind.Constants).SelectMany(s => s.ToMarkdown()).Join("\n");
                 localdict.Add(classItem.TypeName.Replace("`1", "_T"), GetClassMd(TakeOffComma(classItem.name.TypeShortName), classItem.TypeName, classItem.Summary.Join("\n"), ctorMd, constantsMd, propsMd, funcMd));
@@ -145,12 +146,11 @@ namespace Vsxmd
 
             return localdict;
         }
-        public static string TakeOffComma(string element) => element.Replace("`1", "_T");
 
+        public string TakeOffComma(string element) => element.Replace("`1", "<T>");
 
         private static IEnumerable<IGrouping<string, MemberUnit>> ToUnits(XElement docElement)
         {
-            
             var baseunit = docElement
                 .Element("members")
                 .Elements("member")
