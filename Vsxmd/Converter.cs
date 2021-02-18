@@ -30,17 +30,17 @@ namespace Vsxmd
         {
             var sb = new StringBuilder();
             sb.AppendLine("---");
-            sb.AppendLine($"title : {header}");
+            sb.AppendLine($"title : {header.Replace("_T", "(generics)")}");
             sb.AppendLine($"description: {header2}");
             sb.AppendLine("---");
             sb.AppendLine();
-            sb.AppendLine($"# {header}");
+            sb.AppendLine($"# {header.Replace("_T", "(generics)")}");
             sb.AppendLine();
             sb.AppendLine("<CodeBlock slots = 'heading, code' repeat = '1' languages = 'C#' />");
             sb.AppendLine();
             sb.AppendLine("#### Clase");
             sb.AppendLine($"```");
-            sb.AppendLine($"{header}");
+            sb.AppendLine($"{header.Replace("<T>", "(generics)")}");
             sb.AppendLine($"```");
             sb.AppendLine();
             sb.AppendLine("## Descripción");
@@ -145,7 +145,7 @@ namespace Vsxmd
 
             return localdict;
         }
-        public static string TakeOffComma(string element) => element.Replace("`1", "<T>");
+        public static string TakeOffComma(string element) => element.Replace("`1", "_T");
 
 
         private static IEnumerable<IGrouping<string, MemberUnit>> ToUnits(XElement docElement)
