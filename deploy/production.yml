@@ -14,10 +14,10 @@ pr: none
 steps:
   - task: SonarQubePrepare@4
     inputs:
-      SonarQube: 'AGROFENIX-Ci'
+      SonarQube: 'AGROFENIX-Vx'
       scannerMode: 'MSBuild'
-      projectKey: 'AGROFENIX-Ci'
-      projectName: 'AGROFENIX-Ci'
+      projectKey: 'AGROFENIX-Vx'
+      projectName: 'AGROFENIX-Vx'
 
   - task: gitversion/setup@0
     inputs:
