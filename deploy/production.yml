@@ -56,10 +56,7 @@ steps:
       publishWebProjects: false
       zipAfterPublish: true
       artifactName: "-c Release"
-  - task: SonarQubeAnalyze@4
-  - task: SonarQubePublish@4
-    inputs:
-      pollingTimeoutSec: '300'
+
 
 
   - script: |
@@ -77,6 +74,10 @@ steps:
 
     displayName: "publicando en github"
 
+  - task: SonarQubeAnalyze@4
+  - task: SonarQubePublish@4
+    inputs:
+      pollingTimeoutSec: '300'
   
 
 
