@@ -12,6 +12,12 @@ variables:
 pr: none
   
 steps:
+  - task: SonarQubePrepare@4
+    inputs:
+      SonarQube: 'AGROFENIX-Ci'
+      scannerMode: 'MSBuild'
+      projectKey: 'AGROFENIX-Ci'
+      projectName: 'AGROFENIX-Ci'
 
   - task: gitversion/setup@0
     inputs:
@@ -50,6 +56,10 @@ steps:
       publishWebProjects: false
       zipAfterPublish: true
       artifactName: "-c Release"
+  - task: SonarQubeAnalyze@4
+  - task: SonarQubePublish@4
+    inputs:
+      pollingTimeoutSec: '300'
 
 
   - script: |
